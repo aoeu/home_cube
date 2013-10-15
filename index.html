@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!-- 
+    This page, relevant CSS, and Javascript are released under the GPL, version 3.0. 
+    http://opensource.org/licenses/gpl-license.php
+    Utilized libraries, such as jQuery, Raphael, and Vexflow are subject to their own licenses.
+-->
+<html>
+    <head>
+        <title>Who, What, Why, Where</title>
+        <meta charset='utf-8'>
+        <link rel="stylesheet" type="text/css" media="screen" href="styles.css" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="scripts/raphael.js"></script>
+        <script src="scripts/vexflow-min.js"></script>
+    </head>
+    <body>
+        <div id="container">
+          <div id="cube">
+            <div>
+                <h2>Who</h2>
+                <h3>Travis McDemus</h3>
+            </div>
+            <div>
+                <h2>What</h2>
+                <pre class="code">
+% touch hello.go && ed hello.go 
+0
+a
+package main
+
+import "io/ioutil"
+
+func main() {
+  code := "print('Hello, world.\\nGoodbye, C?\\n')\n"
+  ioutil.WriteFile("hello.py", []byte(code), 0644)
+}
+.
+wq
+159
+% go run hello.go && python hello.py
+Hello, world.
+Goodbye, C?
+
+% &#10074;
+                </pre>
+                <canvas id="stave" width=325 height=100></canvas>
+                <script>
+                    var canvas = $("#stave")[0];
+                    var renderer = new Vex.Flow.Renderer(canvas,
+                        Vex.Flow.Renderer.Backends.CANVAS);
+
+                    var ctx = renderer.getContext();
+                    ctx.strokeStyle = '#fff';
+                    ctx.fillStyle = '#fff';
+                    var stave = new Vex.Flow.Stave(10, 0, 300);
+                    stave.addClef("treble").setContext(ctx).draw();
+
+                    var note_names = [ "c", "a", "g", "e" ];
+                    var notes = new Array();
+
+                    for (var i = 0; i < note_names.length; i++) {
+                        notes.push(new Vex.Flow.StaveNote({ 
+                            keys: [ note_names[i] + "/4"], 
+                            duration: "q" 
+                        }));
+                    }
+
+                    var voice = new Vex.Flow.Voice({
+                        num_beats: 4,
+                        beat_value: 4,
+                        resolution: Vex.Flow.RESOLUTION
+                    });
+
+                    voice.addTickables(notes);
+
+                    var formatter = new Vex.Flow.Formatter().
+                    joinVoices([voice]).format([voice], 300);
+
+                    voice.draw(ctx, stave);
+                </script>
+            </div>
+            <div>
+                <h2>Why</h2>
+                <ul id="quotes">
+                    <li>
+                        "Hat man sein warum? des Lebens, 
+                        so vertr&auml;gt man sich fast mit jedem wie?"
+                        <ul class="translation">
+                            <li>
+                                He who has a Why? In life, can tolerate 
+                                almost any How?
+                            </li>
+                            <li>
+                                no. 12
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        "Ohne Musik w&auml;re das Leben ein Irrtum."
+                        <ul class="translation">
+                            <li>
+                                Without music, life would be a mistake.
+                            </li>
+                            <li>
+                                no. 33
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <span id="quotee">
+                    Nietzsche, Friedrich. "Maxims and Arrows".
+                </span>
+            </div>
+            <div>
+                <h2>Where</h2>
+                <ul id="where">
+					<li><a href="http://github.com/aoeu">GitHub</a></li>
+                    <li><a href="http://linkedin.com/in/tmcdemus">LinkedIn</a></li>
+                    <li>sn&#x02d9;&#x026f;&#x01dd;p&#x0254;&#x026f;@s&#x026a;&#x028c;&#x0250;&#x0279;&#x0287;</li>
+                    <li>Brooklyn, NY</li>
+                </ul>
+            </div>
+            <div>
+                <span id="t">T</span>
+            </div>
+            <div></div>
+          </div>
+        </div>
+        <div id="arrows">
+            <div id="left_arrow"  onclick="rotateLeft();"></div>
+            <div id="right_arrow" onclick="rotateRight();"></div>
+       </div>
+        <script src="scripts/scripts.js"></script>
+    </body>
+</html>
